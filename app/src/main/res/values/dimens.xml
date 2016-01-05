@@ -23,7 +23,7 @@
     <dimen name="font_size_biggest">24sp</dimen>
 
     <!-- Common Size -->
-    <dimen name="set_item_height">65dp</dimen>
+    <dimen name="set_item_height">56dp</dimen>
     <dimen name="reader_text_size">16sp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>

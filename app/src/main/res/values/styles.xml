@@ -98,31 +98,28 @@
         <item name="android:typeface">normal</item>
     </style>
 
-    <!--<style name="PullToRefreshDisable">-->
-        <!--<item name="ptrMode">disabled</item>-->
-    <!--</style>-->
-
     <style name="SetItemHeader">
-        <item name="android:textSize">@dimen/font_size_small</item>
-        <item name="android:textColor">@color/green</item>
+        <item name="android:textSize">@dimen/font_size_least</item>
+        <item name="android:textColor">@color/gray_light</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:singleLine">true</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingTop">16dp</item>
         <item name="android:paddingBottom">5dp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:background">@color/widnow_color_secondary</item>
     </style>
 
     <style name="SetItemTextView" parent="ItemBackaground">
         <item name="android:textSize">@dimen/font_size_middle</item>
         <item name="android:textColor">@color/tv_title_color</item>
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">@dimen/set_item_height</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/set_item_height</item>
         <item name="android:singleLine">true</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingLeft">16dp</item>
     </style>
 
     <style name="ItemMe" parent="ItemBackaground">
@@ -145,9 +142,9 @@
     </style>
 
     <style name="SetItem_Summary">
-        <item name="android:textSize">@dimen/font_size_small</item>
+        <item name="android:textSize">@dimen/font_size_least</item>
         <item name="android:textColor">@color/tv_desc_color</item>
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:singleLine">true</item>
     </style>
@@ -188,13 +185,13 @@
     </style>
 
     <!--<style name="Pull_To_Refresh">-->
-        <!--<item name="ptrAnimationStyle">flip</item>-->
-        <!--<item name="ptrDrawable">@drawable/icon_pull_to_refresh</item>-->
-        <!--<item name="ptrHeaderTextColor">@color/tv_desc_color</item>-->
-        <!--<item name="ptrShowIndicator">false</item>-->
-        <!--<item name="ptrListViewExtrasEnabled">true</item>-->
-        <!--<item name="ptrHeaderTextAppearance">@style/ptrHeaderTextStyle</item>-->
-        <!--<item name="android:listSelector">@drawable/item_common_bg</item>-->
+    <!--<item name="ptrAnimationStyle">flip</item>-->
+    <!--<item name="ptrDrawable">@drawable/icon_pull_to_refresh</item>-->
+    <!--<item name="ptrHeaderTextColor">@color/tv_desc_color</item>-->
+    <!--<item name="ptrShowIndicator">false</item>-->
+    <!--<item name="ptrListViewExtrasEnabled">true</item>-->
+    <!--<item name="ptrHeaderTextAppearance">@style/ptrHeaderTextStyle</item>-->
+    <!--<item name="android:listSelector">@drawable/item_common_bg</item>-->
     <!--</style>-->
 
     <style name="ListSelector">

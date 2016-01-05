@@ -8,6 +8,8 @@
     <color name="action_bar_text_color">#e6e6e6</color>
     <color name="action_bar_item_bg_color">#50000000</color>
 
+    <color name="widnow_color_secondary">#f7f7f7</color>
+
     <!-- Main点缀颜色 -->
     <color name="main_dress_color">#da4336</color>
     <color name="main_divder_color">#9d999b</color>
