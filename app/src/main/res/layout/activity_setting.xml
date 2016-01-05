@@ -8,16 +8,11 @@
         android:id="@+id/layout_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="10dp">
+        android:orientation="vertical">
 
         <TextView
             style="@style/SetItemHeader"
             android:text="@string/set_title" />
-
-        <ImageView style="@style/ImageDivider" />
 
         <RelativeLayout
             android:id="@+id/layout_night_model"
@@ -42,7 +37,7 @@
         <RelativeLayout
             android:id="@+id/layout_save_model"
             android:layout_width="fill_parent"
-            android:layout_height="@dimen/set_item_height">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/iv_save_model"
@@ -55,7 +50,10 @@
 
             <LinearLayout
                 style="@style/SetItemTextView"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp">
 
                 <TextView
                     style="@style/SetItem_Title"
@@ -63,6 +61,7 @@
 
                 <TextView
                     style="@style/SetItem_Summary"
+                    android:layout_marginTop="6dp"
                     android:text="@string/set_save_model_summary" />
             </LinearLayout>
         </RelativeLayout>
@@ -72,8 +71,6 @@
         <TextView
             style="@style/SetItemHeader"
             android:text="@string/set_more" />
-
-        <ImageView style="@style/ImageDivider" />
 
         <TextView
             android:id="@+id/set_tv_legal"
@@ -85,16 +82,16 @@
             style="@style/SetItemTextView"
             android:text="@string/set_rating" />
 
-
         <TextView
             android:id="@+id/set_tv_update"
             style="@style/SetItemTextView"
             android:text="@string/set_update" />
 
 
-        <LinearLayout
+        <RelativeLayout
             style="@style/SetItemTextView"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingRight="16dp">
 
             <TextView
                 style="@style/SetItem_Title"
@@ -103,8 +100,9 @@
             <TextView
                 android:id="@+id/tv_version_name"
                 style="@style/SetItem_Summary"
+                android:layout_alignParentRight="true"
                 android:text="@string/set_version" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/layout_set_user"
@@ -115,8 +113,6 @@
             <TextView
                 style="@style/SetItemHeader"
                 android:text="@string/set_account" />
-
-            <ImageView style="@style/ImageDivider" />
 
             <TextView
                 android:id="@+id/set_tv_logout"
