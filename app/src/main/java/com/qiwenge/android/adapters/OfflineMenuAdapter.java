@@ -28,7 +28,6 @@ public class OfflineMenuAdapter extends MyBaseAdapter<OfflineMenuItem> {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.item_offline, null);
             viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.item_tv_title);
-            viewHolder.ivIcon = (ImageView) convertView.findViewById(R.id.item_iv_icon);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -36,16 +35,12 @@ public class OfflineMenuAdapter extends MyBaseAdapter<OfflineMenuItem> {
         OfflineMenuItem model = data.get(position);
         if (model != null) {
             viewHolder.tvTitle.setText(model.title);
-
-            viewHolder.ivIcon.setBackgroundResource(
-                    model.selected ? R.drawable.icon_check_selected : R.drawable.icon_check_normal);
         }
         return convertView;
     }
 
     public class ViewHolder {
         public TextView tvTitle;
-        public ImageView ivIcon;
     }
 
 }

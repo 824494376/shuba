@@ -29,14 +29,14 @@
         <item>夜间</item>
         <item>设置</item>
         <item>目录</item>
-        <!--<item>缓存</item>-->
+        <item>离线</item>
     </string-array>
 
     <integer-array name="read_menu_icons">
         <item>@mipmap/icon_menu_mode_night</item>
         <item>@mipmap/icon_menu_aa</item>
         <item>@mipmap/icon_menu_chapters</item>
-        <!--<item>@mipmap/icon_menu_offline</item>-->
+        <item>@mipmap/icon_menu_offline</item>
     </integer-array>
 
     <!--  -->
@@ -81,10 +81,9 @@
     </string-array>
 
     <string-array name="offline_items">
-        <item>10章</item>
-        <item>50章</item>
-        <item>100章</item>
-        <item>全部</item>
+        <item>后面50章</item>
+        <item>后面100章</item>
+        <item>后面全部</item>
     </string-array>
 
 </resources>
