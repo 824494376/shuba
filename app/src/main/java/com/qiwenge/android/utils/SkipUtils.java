@@ -10,7 +10,6 @@ import com.qiwenge.android.act.BookDetailActivity;
 import com.qiwenge.android.act.ChapterActivity;
 import com.qiwenge.android.act.ReadActivity;
 import com.qiwenge.android.entity.Book;
-import com.qiwenge.android.entity.Mirror;
 import com.qiwenge.android.utils.book.BookManager;
 
 public class SkipUtils {
@@ -34,12 +33,9 @@ public class SkipUtils {
 
         Book record = BookManager.getInstance().getById(book.getId());
 
-        if (record != null) {
-            Mirror mirror = record.currentMirror();
-            if (mirror != null && !StringUtils.isEmptyOrNull(mirror.progress.chapter_id)) {
-                lastReadId = mirror.progress.chapter_id;
-                Log.i("BookShelf", "lastReadId:" + lastReadId);
-            }
+        if (record != null && record.progresses != null) {
+            lastReadId = record.progresses.chapter_id;
+            Log.i("BookShelf", "lastReadId:" + lastReadId);
         }
 
         if (StringUtils.isEmptyOrNull(lastReadId)) {
@@ -48,7 +44,6 @@ public class SkipUtils {
             skipToReader(context, book, lastReadId);
         }
     }
-
 
     private static void skipToChapter(Context context, Book book) {
         Bundle extra = new Bundle();

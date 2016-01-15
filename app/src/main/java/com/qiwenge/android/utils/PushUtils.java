@@ -35,20 +35,6 @@ public class PushUtils {
         mContext = context;
     }
 
-//    public boolean isOpenPush() {
-//        return PreferencesUtils.getBoolean(mContext, PUSH_MANAGER, IS_OPEN);
-//    }
-//
-//    public void stopPush() {
-//        JPushInterface.stopPush(mContext);
-//        PreferencesUtils.putBoolean(mContext, PUSH_MANAGER, IS_OPEN, false);
-//    }
-//
-//    public void openPush() {
-//        JPushInterface.resumePush(mContext);
-//        PreferencesUtils.putBoolean(mContext, PUSH_MANAGER, IS_OPEN, true);
-//    }
-
     public void setAlias() {
         if (LoginManager.isLogin()) {
             setAlias(LoginManager.getUser().getId(), RETRY_COUNT);
@@ -70,22 +56,22 @@ public class PushUtils {
         });
     }
 
-    //stg_bookid_mirrorid
+    //TODO setTags stg_bookid_mirrorid
     public void setTags(List<Book> books) {
-        Set<String> tags = new HashSet<>();
-        String format;
-        if (Constants.DEBUG) {
-            format = "stg_%s";
-        } else {
-            format = "%s";
-        }
-        for (Book book : books) {
-            tags.add(String.format(format, Md5.encode(book.getId() + "_" + book.currentMirrorId())));
-        }
-
-        Set<String> filterTags = JPushInterface.filterValidTags(tags);
-
-        setTags(filterTags, RETRY_COUNT);
+//        Set<String> tags = new HashSet<>();
+//        String format;
+//        if (Constants.DEBUG) {
+//            format = "stg_%s";
+//        } else {
+//            format = "%s";
+//        }
+//        for (Book book : books) {
+//            tags.add(String.format(format, Md5.encode(book.getId() + "_" + book.currentMirrorId())));
+//        }
+//
+//        Set<String> filterTags = JPushInterface.filterValidTags(tags);
+//
+//        setTags(filterTags, RETRY_COUNT);
     }
 
     private void setTags(final Set<String> tags, final int retryCount) {

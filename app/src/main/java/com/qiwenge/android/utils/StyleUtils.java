@@ -10,9 +10,7 @@ import com.qiwenge.android.R;
 public class StyleUtils {
 
     public static void setColorSchemeResources(SwipeRefreshLayout swipeRefreshLayout) {
-        swipeRefreshLayout.setColorSchemeResources(R.color.main_dress_color,
-                android.R.color.holo_orange_light, R.color.green,
-                android.R.color.holo_blue_light);
+        swipeRefreshLayout.setColorSchemeResources(R.color.main_dress_color);
     }
 
 }

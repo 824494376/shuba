@@ -164,34 +164,6 @@ public class BookManager {
         return indexOf(book) >= 0;
     }
 
-    public void updateProgresses(Context context, List<Progresses> list) {
-        Book book;
-        Mirror mirror;
-        Progresses progresses;
-        Progresses realProgresses;
-        int bookShelfSize = books.size();
-        int progressSize = list.size();
-
-        for (int i = 0; i < bookShelfSize; i++) {
-            for (int j = 0; j < progressSize; j++) {
-                book = books.get(i);
-                progresses = list.get(j);
-                if (book.getId().equals(progresses.book_id)) {
-                    mirror = book.getMirror(progresses.mirror_id);
-                    if (mirror != null) {
-                        realProgresses = new Progresses();
-                        realProgresses.chapter_id = progresses.chapter_id;
-                        realProgresses.book_id = progresses.book_id;
-                        realProgresses.chapters = progresses.chapters;
-                        realProgresses.chars = progresses.chars;
-                        mirror.progress = realProgresses;
-                    }
-                }
-            }
-        }
-        save(context);
-    }
-
 }
 
 
