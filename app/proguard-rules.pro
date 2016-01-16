@@ -20,44 +20,36 @@
 # Gson uses generic type information stored in a class file when working with fields. Proguard
 # removes such information by default, so configure it to keep all of it.
 
--keepattributes Signature
+-ignorewarnings
 
+-keepattributes Signature
 -keepattributes *Annotation*
 
--dontwarn dagger.internal.codegen.**
-
--dontwarn com.squareup.**
-
--dontwarn  com.google.common.**
-
-# Gson specific classes
 -keep class sun.misc.Unsafe { *; }
-#-keep class com.google.gson.stream.** { *; }
 
-# Application classes that will be serialized/deserialized over Gson
+-dontwarn dagger.internal.codegen.**
+-dontwarn com.squareup.**
+-dontwarn com.google.common.**
+-dontwarn android.net.http.**
+-dontwarn android.support.v4.**
+
+-keep class android.support.v4.** { *; }
 -keep class com.google.gson.examples.android.model.** { *; }
 
-##---------------End: proguard configuration for Gson  ----------
-
--keep class * implements android.os.Parcelable {
-public static final android.os.Parcelable$Creator *;
-}
+#-keep class * implements android.os.Parcelable {
+#public static final android.os.Parcelable$Creator *;
+#}
 
 -dontwarn android.net.http.**
 
 -dontwarn roboguice.**
 
-#google
 -keep class com.google.** { *; }
-
 -keep class com.google.gson.** { *; }
-
-#极光推送
 -keep class cn.jpush.android.** { *; }
-
 -keep class com.viewpagerindicator.** { *; }
-
 -keep class com.loopj.android.** { *; }
+-keep class com.liuguangqiang.** { *; }
 
 #QQ
 -keep class com.tencent.** { *; }
@@ -66,8 +58,6 @@ public static final android.os.Parcelable$Creator *;
 #shuba
 -keep class com.qiwenge.android.entity.** { *; }
 -keep class com.qiwenge.android.entity.base.** { *; }
-
-
 
 #ButterKnife --------------------------------------------------------------------------------------
 -keep class butterknife.** { *; }
@@ -122,3 +112,12 @@ public static final android.os.Parcelable$Creator *;
 # MVP
 -keep class com.qiwenge.android.mvp.** { *; }
 -keep class com.liuguangqiang.android.mvp** { *; }
+
+#EventBus
+-keep class de.greenrobot.** { *; }
+-keepclassmembers class ** {
+    public void onEvent*(**);
+}
+
+#RxJava and RxAndroid
+-keep class rx.** { *; }
