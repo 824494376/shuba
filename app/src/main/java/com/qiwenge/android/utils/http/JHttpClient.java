@@ -11,7 +11,7 @@ import com.qiwenge.android.entity.Auth;
 import com.qiwenge.android.utils.FailureUtils;
 import com.qiwenge.android.utils.LoginManager;
 
-import org.apache.http.Header;
+import cz.msebera.android.httpclient.Header;
 
 public class JHttpClient {
 

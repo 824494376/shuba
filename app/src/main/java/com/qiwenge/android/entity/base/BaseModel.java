@@ -19,6 +19,9 @@ public class BaseModel implements Parcelable {
         this.id = id;
     }
 
+    public BaseModel() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -30,10 +33,7 @@ public class BaseModel implements Parcelable {
         dest.writeParcelable(this._id, 0);
     }
 
-    public BaseModel() {
-    }
-
-    private BaseModel(Parcel in) {
+    protected BaseModel(Parcel in) {
         this.id = in.readString();
         this._id = in.readParcelable(Id.class.getClassLoader());
     }

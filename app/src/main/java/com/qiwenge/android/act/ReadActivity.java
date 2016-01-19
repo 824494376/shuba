@@ -28,7 +28,9 @@ import com.qiwenge.android.async.AsyncUtils;
 import com.qiwenge.android.base.BaseActivity;
 import com.qiwenge.android.constant.Constants;
 import com.qiwenge.android.entity.Book;
+import com.qiwenge.android.entity.Chapter;
 import com.qiwenge.android.entity.Mirror;
+import com.qiwenge.android.entity.Progresses;
 import com.qiwenge.android.entity.ReadMenu;
 import com.qiwenge.android.entity.ReadTheme;
 import com.qiwenge.android.fragments.ReadFragment;
@@ -46,6 +48,8 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 
 public class ReadActivity extends BaseActivity {
 
@@ -169,6 +173,18 @@ public class ReadActivity extends BaseActivity {
         initViews();
         initReadFragment();
         getIntentData();
+
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     @Override
@@ -188,7 +204,6 @@ public class ReadActivity extends BaseActivity {
             inited = true;
         }
     }
-
 
     @Override
     protected void onPause() {
@@ -225,7 +240,6 @@ public class ReadActivity extends BaseActivity {
             fragment.setBook(book);
             AsyncUtils.postViewTotal(book.getId());
             tvBookTitle.setText(book.title);
-
             offlineMenu.setBook(book);
         }
 
@@ -235,18 +249,19 @@ public class ReadActivity extends BaseActivity {
         }
     }
 
+    @Subscribe
+    public void onEvent(Chapter chapter) {
+        if (offlineMenu != null) {
+            offlineMenu.setChapter(chapter);
+        }
+    }
+
     private void getChapter(String chapterId) {
         if (book != null) {
-            Book b = BookManager.getInstance().getById(book.getId());
+            Book record = BookManager.getInstance().getById(book.getId());
 
-            Mirror mirror = null;
-
-            if (b != null) {
-                mirror = b.currentMirror();
-            }
-
-            if (b != null && mirror != null && chapterId.equals(mirror.progress.chapter_id)) {
-                int length = mirror.progress.chars;
+            if (record != null && record.progresses != null && chapterId.equals(record.progresses.chapter_id)) {
+                int length = record.progresses.chars;
                 fragment.getChapter(chapterId, length);
             } else {
                 fragment.getChapter(chapterId);
@@ -291,7 +306,7 @@ public class ReadActivity extends BaseActivity {
 
     private void initBottomMenu() {
         menuAdapter = new ReadMenuAdapter(getApplicationContext(), menuData);
-        gvBottomMenu.setNumColumns(3);
+        gvBottomMenu.setNumColumns(menuData.size());
         gvBottomMenu.setAdapter(menuAdapter);
 
         themeAdapter = new ReadThemeAdapter(getApplicationContext(), themeData);

@@ -44,6 +44,7 @@
 
 -dontwarn roboguice.**
 
+-keep class com.baidu.** { *; }
 -keep class com.google.** { *; }
 -keep class com.google.gson.** { *; }
 -keep class cn.jpush.android.** { *; }

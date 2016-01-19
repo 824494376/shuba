@@ -1,11 +1,13 @@
 package com.qiwenge.android.entity;
 
+import android.os.Parcel;
+
 import com.qiwenge.android.entity.base.BaseModel;
 
 /**
  * 章节。 Chapter
  * <p/>
- * Created by John on 2014年5月5日
+ * Created by Eric on 2014年5月5日
  */
 public class Chapter extends BaseModel {
 
@@ -55,4 +57,49 @@ public class Chapter extends BaseModel {
      * 是否被选中，目录中定位到已经看过的地方。
      */
     public boolean isSelected = false;
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(this.title);
+        dest.writeString(this.book_title);
+        dest.writeInt(this.number);
+        dest.writeString(this.content);
+        dest.writeInt(this.status);
+        dest.writeString(this.source);
+        dest.writeParcelable(this.prev, 0);
+        dest.writeParcelable(this.next, 0);
+        dest.writeByte(isSelected ? (byte) 1 : (byte) 0);
+    }
+
+    public Chapter() {
+    }
+
+    protected Chapter(Parcel in) {
+        super(in);
+        this.title = in.readString();
+        this.book_title = in.readString();
+        this.number = in.readInt();
+        this.content = in.readString();
+        this.status = in.readInt();
+        this.source = in.readString();
+        this.prev = in.readParcelable(RefModel.class.getClassLoader());
+        this.next = in.readParcelable(RefModel.class.getClassLoader());
+        this.isSelected = in.readByte() != 0;
+    }
+
+    public static final Creator<Chapter> CREATOR = new Creator<Chapter>() {
+        public Chapter createFromParcel(Parcel source) {
+            return new Chapter(source);
+        }
+
+        public Chapter[] newArray(int size) {
+            return new Chapter[size];
+        }
+    };
 }

@@ -30,8 +30,11 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
                     bookShelf = new BookshelfFragment();
                 }
                 return bookShelf;
+
             case 1:
-                if (bookCity == null) bookCity = new BookCityFragment();
+                if (bookCity == null) {
+                    bookCity = new BookCityFragment();
+                }
                 return bookCity;
             case 2:
                 return new MeFragment();

@@ -24,12 +24,6 @@ public class Progresses implements Parcelable {
      */
     public int chars = 0;
 
-    public String mirror_id = "";
-
-    public String book_id;
-
-    public Book book;
-
     @Override
     public int describeContents() {
         return 0;

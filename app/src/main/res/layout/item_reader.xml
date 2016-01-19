@@ -1,7 +1,21 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tv_reader"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:textColor="@color/tv_content_color_normal"
-    android:layerType="software"
-    style="@style/ReaderText"  />
+    android:layout_height="match_parent">
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/tv_reader"
+        style="@style/ReaderText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layerType="software"
+        android:textColor="@color/tv_content_color_normal" />
+
+    <RelativeLayout
+        android:id="@+id/layout_read_ad"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray_light"
+        android:visibility="gone" />
+
+</RelativeLayout>

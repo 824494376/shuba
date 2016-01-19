@@ -1,51 +1,22 @@
 package com.qiwenge.android.entity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.qiwenge.android.entity.base.BaseModel;
-import com.qiwenge.android.entity.base.Id;
 
 /**
  * Book
  * <p/>
- * Created by John on 2014-5-6
+ * Created by Eric on 2014-5-6
  */
 public class Book extends BaseModel implements Parcelable {
 
     public boolean hasUpdate = false;
 
     public int updateArrival = 0;
-
-    public List<Mirror> mirrorList = new ArrayList<Mirror>();
-
-    public Mirror currentMirror() {
-        if (mirrorList == null || mirrorList.isEmpty()) return null;
-
-        for (Mirror mirror : mirrorList) {
-            if (mirror.current) return mirror;
-        }
-
-        return mirrorList.get(0);
-    }
-
-    public Mirror getMirror(String mirrorId) {
-        if (mirrorList == null || mirrorList.isEmpty()) return null;
-
-        for (Mirror mirror : mirrorList) {
-            if (mirror.getId().equals(mirrorId)) return mirror;
-        }
-
-        return mirrorList.get(0);
-    }
-
-    public String currentMirrorId() {
-        Mirror current = currentMirror();
-        return current == null ? "" : current.getId();
-    }
 
     public String title;
 
@@ -67,6 +38,8 @@ public class Book extends BaseModel implements Parcelable {
 
     public int chapter_total;
 
+    public Progresses progresses;
+
     public Book() {
     }
 
@@ -77,31 +50,33 @@ public class Book extends BaseModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeTypedList(mirrorList);
+        super.writeToParcel(dest, flags);
+        dest.writeByte(hasUpdate ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.updateArrival);
         dest.writeString(this.title);
         dest.writeString(this.description);
         dest.writeString(this.author);
         dest.writeString(this.cover);
         dest.writeInt(this.status);
         dest.writeInt(this.finish);
-        dest.writeSerializable(this.categories);
+        dest.writeStringList(this.categories);
         dest.writeInt(this.chapter_total);
-        dest.writeString(this.id);
-        dest.writeParcelable(this._id, 0);
+        dest.writeParcelable(this.progresses, 0);
     }
 
-    private Book(Parcel in) {
-        in.readTypedList(mirrorList, Mirror.CREATOR);
+    protected Book(Parcel in) {
+        super(in);
+        this.hasUpdate = in.readByte() != 0;
+        this.updateArrival = in.readInt();
         this.title = in.readString();
         this.description = in.readString();
         this.author = in.readString();
         this.cover = in.readString();
         this.status = in.readInt();
         this.finish = in.readInt();
-        this.categories = (ArrayList<String>) in.readSerializable();
+        this.categories = in.createStringArrayList();
         this.chapter_total = in.readInt();
-        this.id = in.readString();
-        this._id = in.readParcelable(Id.class.getClassLoader());
+        this.progresses = in.readParcelable(Progresses.class.getClassLoader());
     }
 
     public static final Creator<Book> CREATOR = new Creator<Book>() {

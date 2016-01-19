@@ -29,22 +29,23 @@ import com.qiwenge.android.constant.Constants;
 import com.qiwenge.android.entity.Book;
 import com.qiwenge.android.entity.Chapter;
 import com.qiwenge.android.entity.Page;
+import com.qiwenge.android.listeners.ChapterListener;
 import com.qiwenge.android.listeners.ReadPageClickListener;
 import com.qiwenge.android.reader.OnReaderPageListener;
 import com.qiwenge.android.reader.ReadPagerView;
 import com.qiwenge.android.reader.ReaderAdapter;
 import com.qiwenge.android.ui.SlowViewPager;
-import com.qiwenge.android.utils.ApiUtils;
 import com.qiwenge.android.utils.BookShelfUtils;
+import com.qiwenge.android.utils.ChapterStore;
 import com.qiwenge.android.utils.ReaderUtils;
 import com.qiwenge.android.utils.ThemeUtils;
 import com.qiwenge.android.utils.TimeUtils;
-import com.qiwenge.android.utils.http.JHttpClient;
-import com.qiwenge.android.utils.http.JsonResponseHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class ReadFragment extends BaseFragment {
 
@@ -119,11 +120,6 @@ public class ReadFragment extends BaseFragment {
     private String nextContent;
 
     private String prevContent;
-
-    /**
-     * 小说Id
-     */
-//    private String bookId;
 
     private Book book;
 
@@ -394,14 +390,14 @@ public class ReadFragment extends BaseFragment {
             return;
         }
 
-        String url = ApiUtils.getChapter(chapterId);
-        JHttpClient.get(getActivity(), url, null, new JsonResponseHandler<Chapter>(Chapter.class, false) {
+        ChapterStore.getChapter(book.id, chapterId, new ChapterListener() {
 
             @Override
-            public void onSuccess(final Chapter result) {
-                if (result != null) {
-                    chapterCache.put(chapterId, result);
-                    handleCurrent(chapterId, result, length);
+            public void onSuccess(Chapter chapter) {
+                if (chapter != null) {
+                    EventBus.getDefault().post(chapter);
+                    chapterCache.put(chapterId, chapter);
+                    handleCurrent(chapterId, chapter, length);
                 }
             }
 
@@ -423,14 +419,45 @@ public class ReadFragment extends BaseFragment {
                     retryLength = length;
                 }
             }
-
-            @Override
-            public void onFailure(String msg) {
-                if (msg == null) msg = "unknow msg";
-                System.out.println(msg);
-            }
-
         });
+
+//        JHttpClient.get(getActivity(), url, null, new JsonResponseHandler<Chapter>(Chapter.class, false) {
+//
+//            @Override
+//            public void onSuccess(final Chapter result) {
+//                if (result != null) {
+//                    EventBus.getDefault().post(result);
+//                    chapterCache.put(chapterId, result);
+//                    handleCurrent(chapterId, result, length);
+//                }
+//            }
+//
+//            @Override
+//            public void onStart() {
+//                if (layoutEmpty.getVisibility() == View.VISIBLE)
+//                    hideEmptyView();
+//
+//                if (pageList.isEmpty())
+//                    pbLoading.setVisibility(View.VISIBLE);
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                pbLoading.setVisibility(View.GONE);
+//                if (pageList.isEmpty()) {
+//                    showEmptyView();
+//                    retryChapterId = chapterId;
+//                    retryLength = length;
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(String msg) {
+//                if (msg == null) msg = "unknow msg";
+//                System.out.println(msg);
+//            }
+//
+//        });
     }
 
     /**
@@ -445,23 +472,34 @@ public class ReadFragment extends BaseFragment {
             return;
         }
 
-        String url = ApiUtils.getChapter(chapterId);
-        JHttpClient.get(getActivity(), url, null, new JsonResponseHandler<Chapter>(Chapter.class, false) {
+//        String url = ApiUtils.getChapter(chapterId);
+//        JHttpClient.get(getActivity(), url, null, new JsonResponseHandler<Chapter>(Chapter.class, false) {
+//
+//            @Override
+//            public void onSuccess(final Chapter result) {
+//                if (result != null) {
+//                    chapterCache.put(chapterId, result);
+//                    handleNext(result);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(String msg) {
+//                if (msg == null) msg = "unknow msg";
+//                System.out.println(msg);
+//            }
+//
+//        });
+
+        ChapterStore.getChapter(book.id, chapterId, new ChapterListener() {
 
             @Override
-            public void onSuccess(final Chapter result) {
-                if (result != null) {
-                    chapterCache.put(chapterId, result);
-                    handleNext(result);
+            public void onSuccess(Chapter chapter) {
+                if (chapter != null) {
+                    chapterCache.put(chapterId, chapter);
+                    handleNext(chapter);
                 }
             }
-
-            @Override
-            public void onFailure(String msg) {
-                if (msg == null) msg = "unknow msg";
-                System.out.println(msg);
-            }
-
         });
 
     }
@@ -478,23 +516,34 @@ public class ReadFragment extends BaseFragment {
             return;
         }
 
-        String url = ApiUtils.getChapter(chapterId);
-        JHttpClient.get(getActivity(), url, null, new JsonResponseHandler<Chapter>(Chapter.class, false) {
+        ChapterStore.getChapter(book.id, chapterId, new ChapterListener() {
 
             @Override
-            public void onSuccess(final Chapter result) {
-                if (result != null) {
-                    chapterCache.put(chapterId, result);
-                    handlePrev(result);
+            public void onSuccess(Chapter chapter) {
+                if (chapter != null) {
+                    chapterCache.put(chapterId, chapter);
+                    handlePrev(chapter);
                 }
             }
-
-            @Override
-            public void onFailure(String msg) {
-                if (msg == null) msg = "unknow msg";
-            }
-
         });
+
+//        String url = ApiUtils.getChapter(chapterId);
+//        JHttpClient.get(getActivity(), url, null, new JsonResponseHandler<Chapter>(Chapter.class, false) {
+//
+//            @Override
+//            public void onSuccess(final Chapter result) {
+//                if (result != null) {
+//                    chapterCache.put(chapterId, result);
+//                    handlePrev(result);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(String msg) {
+//                if (msg == null) msg = "unknow msg";
+//            }
+//
+//        });
     }
 
     private List<Page> covertPageList(List<String> list, Chapter result) {

@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -19,7 +18,11 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.loopj.android.http.RequestParams;
+import com.baidu.mobad.feeds.BaiduNative;
+import com.baidu.mobad.feeds.NativeErrorCode;
+import com.baidu.mobad.feeds.NativeResponse;
+import com.baidu.mobad.feeds.RequestParameters;
+import com.liuguangqiang.framework.utils.Logs;
 import com.qiwenge.android.R;
 import com.qiwenge.android.adapters.BookShelfAdapter;
 import com.qiwenge.android.async.AsyncRemoveBook;
@@ -27,16 +30,17 @@ import com.qiwenge.android.base.BaseFragment;
 import com.qiwenge.android.constant.MyActions;
 import com.qiwenge.android.entity.Book;
 import com.qiwenge.android.entity.BookUpdate;
-import com.qiwenge.android.entity.BookUpdateList;
-import com.qiwenge.android.entity.Mirror;
 import com.qiwenge.android.ui.dialogs.MyDialog;
-import com.qiwenge.android.utils.ApiUtils;
 import com.qiwenge.android.utils.BookShelfUtils;
 import com.qiwenge.android.utils.SkipUtils;
 import com.qiwenge.android.utils.StyleUtils;
 import com.qiwenge.android.utils.book.BookManager;
-import com.qiwenge.android.utils.http.JHttpClient;
-import com.qiwenge.android.utils.http.JsonResponseHandler;
+
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class BookshelfFragment extends BaseFragment {
 
@@ -62,7 +66,30 @@ public class BookshelfFragment extends BaseFragment {
         bookShelfReceiver = new BookShelfReceiver();
         IntentFilter intentFilter = new IntentFilter(MyActions.UPDATE_BOOK_SHELF);
         getActivity().registerReceiver(bookShelfReceiver, intentFilter);
+
+        testNativeAd();
     }
+
+    private void testNativeAd() {
+        Logs.i("testNativeAd");
+        BaiduNative baiduNative = new BaiduNative(getActivity(), "2394443", new BaiduNative.BaiduNativeNetworkListener() {
+            @Override
+            public void onNativeLoad(List<NativeResponse> list) {
+                Logs.i("onNativeLoad : " + list.toString());
+            }
+
+            @Override
+            public void onNativeFail(NativeErrorCode nativeErrorCode) {
+                Logs.i("onNativeFail:" + nativeErrorCode.toString());
+            }
+        });
+
+        RequestParameters requestParameters = new RequestParameters.Builder().keywords("彩票,理财")
+                .confirmDownloading(true)
+                .build();
+        baiduNative.makeRequest(requestParameters);
+    }
+
 
     @Override
     public void onResume() {
@@ -98,11 +125,10 @@ public class BookshelfFragment extends BaseFragment {
                 }
             }
         });
-
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                chkBookUpdated();
+                getBooks();
             }
         });
 
@@ -125,9 +151,12 @@ public class BookshelfFragment extends BaseFragment {
     }
 
     private void showOrHideEmpty() {
-        if (data.isEmpty())
+        Logs.i("showOrHideEmpty");
+        if (data.isEmpty()) {
             layoutEmpty.setVisibility(View.VISIBLE);
-        else layoutEmpty.setVisibility(View.GONE);
+        } else {
+            layoutEmpty.setVisibility(View.GONE);
+        }
     }
 
     private void showBookDialog(final Book book) {
@@ -148,52 +177,6 @@ public class BookshelfFragment extends BaseFragment {
             }
         });
         myDialog.show();
-    }
-
-    /**
-     * 检查书架中的书，是否有更新。
-     */
-    private void chkBookUpdated() {
-        StringBuilder mirrorsId = new StringBuilder();
-        StringBuilder chapterTotals = new StringBuilder();
-        Book book;
-        Mirror mirror;
-        for (int i = 0; i < data.size(); i++) {
-            book = data.get(i);
-            mirror = book.currentMirror();
-            if (i > 0) {
-                mirrorsId.append(",");
-                chapterTotals.append(",");
-            }
-
-            if (mirror != null)
-                mirrorsId.append(mirror.getId());
-            chapterTotals.append(book.chapter_total);
-        }
-
-        String url = ApiUtils.checkBookUpdate();
-        RequestParams params = new RequestParams();
-        params.put("mirrors", mirrorsId.toString());
-        params.put("chapter_totals", chapterTotals.toString());
-        JHttpClient.get(getActivity(), url, params, new JsonResponseHandler<BookUpdateList>(BookUpdateList.class) {
-
-            @Override
-            public void onSuccess(BookUpdateList result) {
-                if (result != null) {
-                    showUpdate(result.result);
-                }
-            }
-
-            @Override
-            public void onOrigin(String json) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                mSwipeLayout.setRefreshing(false);
-            }
-        });
     }
 
     private void showUpdate(List<BookUpdate> updates) {
@@ -224,31 +207,35 @@ public class BookshelfFragment extends BaseFragment {
     }
 
     private void getBooks() {
-        if (!gettingBooks) {
-            new AsyncBookShelfs().execute();
-            gettingBooks = true;
-        }
-    }
-
-    private boolean gettingBooks = false;
-
-    private class AsyncBookShelfs extends AsyncTask<Void, Integer, List<Book>> {
-
-        @Override
-        protected List<Book> doInBackground(Void... params) {
-            return BookManager.getInstance().getAll();
-        }
-
-        @Override
-        protected void onPostExecute(List<Book> result) {
-            if (result != null) {
-                data.clear();
-                adapter.add(result);
-                chkBookUpdated();
+        Logs.i("getBooks");
+        Observable.create(new Observable.OnSubscribe<List<Book>>() {
+            @Override
+            public void call(Subscriber<? super List<Book>> subscriber) {
+                subscriber.onNext(BookManager.getInstance().getAll());
+                subscriber.onCompleted();
             }
-            showOrHideEmpty();
-            gettingBooks = false;
-        }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Book>>() {
+                    @Override
+                    public void onCompleted() {
+                        showOrHideEmpty();
+                        mSwipeLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(List<Book> books) {
+                        if (books != null && !books.isEmpty()) {
+                            data.clear();
+                            adapter.add(books);
+                        }
+                    }
+                });
     }
 
     public class BookShelfReceiver extends BroadcastReceiver {
